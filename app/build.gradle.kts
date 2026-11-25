@@ -5,7 +5,7 @@ plugins {
 }
 
 // Version unique de l'application : le versionCode en est déduit automatiquement.
-val versionNom = "0.2.0"
+val versionNom = "1.0.0"
 val versionCodeCalcule = versionNom.split(".").map { it.toInt() }.let { it[0] * 10000 + it[1] * 100 + it[2] }
 
 android {

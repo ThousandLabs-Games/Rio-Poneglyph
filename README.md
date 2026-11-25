@@ -12,7 +12,7 @@ Dépôt officiel : https://github.com/ThousandLabs-Games/Rio-Poneglyph
 2. Téléchargez le fichier `Rio-Poneglyph-x.y.z.apk` de la dernière version.
 3. Ouvrez-le et autorisez l'installation si Android le demande.
 
-Les mises à jour s'installent par-dessus la version existante sans perte de données, tant qu'elles proviennent de ce dépôt.
+Les mises à jour s'installent par-dessus la version existante sans perte de données, tant qu'elles proviennent de ce dépôt. Depuis la version 1.0 : Réglages → Mises à jour → « Activer l'accès Internet (2 minutes) ».
 
 ## Avant de désinstaller
 
@@ -37,12 +37,13 @@ Format des chapitres : voir [FORMAT_PAGES.md](FORMAT_PAGES.md).
 | Coffre chiffré, importation par déplacement, dossiers et sous-dossiers | Version 0.2 |
 | Lecteur vidéo intégré, visionneuse d'images | Version 0.2 |
 | Garde-fou : exportation complète et vérification d'intégrité | Version 0.2 |
-| Lecteur de pages (mangas, webtoons) | À venir |
-| Mises à jour intégrées depuis les Releases | À venir |
+| Lecteur de pages : défilement vertical, planche par planche, aperçu | Version 1.0 |
+| Mises à jour intégrées (accès Internet de 2 minutes, signature vérifiée) | Version 1.0 |
+| Guide « Comment faire » et Nouveautés intégrés | Version 1.0 |
 
 ## Confidentialité
 
-- Aucune connexion Internet en usage normal.
+- Aucune connexion Internet en usage normal. L'accès n'est ouvert que 2 minutes, à votre demande, depuis Réglages → Mises à jour, et uniquement vers GitHub.
 - Aucune publicité, aucun suivi, aucun compte.
 - Aucun service d'accessibilité.
 

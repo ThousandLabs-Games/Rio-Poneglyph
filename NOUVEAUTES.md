@@ -1,17 +1,12 @@
-## Rio Poneglyph 0.2.0
+## Rio Poneglyph 1.0.0
 
-Le coffre est maintenant opérationnel.
+Première version complète.
 
-- Importation par déplacement : chaque fichier est chiffré, relu et vérifié avant que l'original soit supprimé de l'espace partagé (Galerie, Google Files).
-- Importation de dossiers de pages : un dossier d'images devient un chapitre, et chaque sous-dossier aussi.
-- Dossiers et sous-dossiers illimités : créer, renommer, déplacer, copier, supprimer, trier (nom, date, taille, type) et rechercher.
-- Renommage sans risque : seul le nom affiché change, jamais le contenu chiffré ni l'extension réelle.
-- Lecteur vidéo intégré : lecture directe depuis le coffre, reprise automatique, barre de progression précise, avance et retour de 10 secondes, double appui, luminosité (glissement à gauche), volume (glissement à droite), vitesse de lecture.
-- Visionneuse d'images avec zoom.
-- Garde-fou du coffre : état du coffre, exportation complète vérifiée et contrôle d'intégrité avant toute désinstallation.
-- Exportation : « Copier » ou « Sortir du coffre » vers le dossier de votre choix, avec vérification de chaque copie.
-- Aucune autorisation de stockage nécessaire : tout passe par le sélecteur de fichiers d'Android.
+- Lecteur de pages : défilement vertical (webtoon), planche par planche (gauche-droite ou droite-gauche pour les mangas), aperçu de toutes les pages.
+- Reprise à la dernière page lue, zoom à deux doigts et par double appui, saut rapide par la barre de pages.
+- Mises à jour intégrées : bouton « Activer l'accès Internet (2 minutes) », recherche automatique, téléchargement depuis le dépôt officiel, vérification de la signature, coupure de l'accès dès la fin.
+- Guide « Comment faire » intégré et écran Nouveautés.
 
-À venir : lecteur de pages (mangas, webtoons), mises à jour intégrées, guide « Comment faire ».
+Rappel des versions précédentes : coffre chiffré, importation par déplacement vérifiée, dossiers et sous-dossiers, lecteur vidéo, garde-fou, verrouillage PIN, schéma, mot de passe et empreinte.
 
 Dépôt officiel : https://github.com/ThousandLabs-Games/Rio-Poneglyph

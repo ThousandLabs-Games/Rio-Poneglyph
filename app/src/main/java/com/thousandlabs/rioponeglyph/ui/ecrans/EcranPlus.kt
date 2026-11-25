@@ -20,6 +20,9 @@ import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.SystemUpdate
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Shield
@@ -53,7 +56,11 @@ const val URL_DEPOT = "https://github.com/ThousandLabs-Games/Rio-Poneglyph"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: () -> Unit, onGardeFou: () -> Unit) {
+fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: () -> Unit, onGardeFou: () -> Unit,
+    onMisesAJour: () -> Unit,
+    onGuide: () -> Unit,
+    onNouveautes: () -> Unit
+) {
     val contexte = LocalContext.current
     val biometrieDisponible = remember { Biometrie.disponible(contexte) }
     var biometrie by remember { mutableStateOf(verrou.biometrieActive && biometrieDisponible) }
@@ -132,6 +139,28 @@ fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: ()
                 Icons.Outlined.HealthAndSafety, "Garde-fou du coffre",
                 "État du coffre, exportation complète et vérification avant désinstallation",
                 onClic = onGardeFou,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            TitreSection("Mises à jour et aide")
+            LigneReglage(
+                Icons.Outlined.SystemUpdate, "Mises à jour",
+                "Accès Internet temporaire (2 minutes) pour installer la dernière version",
+                onClic = onMisesAJour,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+            LigneReglage(
+                Icons.AutoMirrored.Outlined.HelpOutline, "Comment faire",
+                "Guide d'utilisation pas à pas",
+                onClic = onGuide,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+            LigneReglage(
+                Icons.Outlined.NewReleases, "Nouveautés",
+                "Contenu de chaque version",
+                onClic = onNouveautes,
                 fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
             )
 

@@ -33,7 +33,11 @@ import com.thousandlabs.rioponeglyph.ui.ecrans.EcranAccueil
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranConfiguration
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranDossier
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranGardeFou
+import com.thousandlabs.rioponeglyph.ui.ecrans.EcranGuide
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranImage
+import com.thousandlabs.rioponeglyph.ui.ecrans.EcranLecteurPages
+import com.thousandlabs.rioponeglyph.ui.ecrans.EcranMisesAJour
+import com.thousandlabs.rioponeglyph.ui.ecrans.EcranNouveautes
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranLecteurVideo
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranOuverture
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranPlus
@@ -50,6 +54,10 @@ private sealed interface Ecran {
     data class Dossier(val id: String) : Ecran
     data class Video(val id: String) : Ecran
     data class Image(val id: String) : Ecran
+    data class Pages(val id: String) : Ecran
+    data object MisesAJour : Ecran
+    data object Guide : Ecran
+    data object Nouveautes : Ecran
 }
 
 @Composable
@@ -72,6 +80,7 @@ fun RioRoot(verrou: GestionVerrou) {
             TypeNoeud.DOSSIER -> pile.add(Ecran.Dossier(n.id))
             TypeNoeud.VIDEO -> pile.add(Ecran.Video(n.id))
             TypeNoeud.IMAGE -> pile.add(Ecran.Image(n.id))
+            TypeNoeud.CHAPITRE -> pile.add(Ecran.Pages(n.id))
             else -> Unit
         }
     }
@@ -145,11 +154,22 @@ fun RioRoot(verrou: GestionVerrou) {
 
                     is Ecran.Image -> EcranImage(id = ecran.id, onRetour = { retour() })
 
+                    is Ecran.Pages -> EcranLecteurPages(id = ecran.id, onRetour = { retour() })
+
+                    Ecran.MisesAJour -> EcranMisesAJour(onRetour = { retour() })
+
+                    Ecran.Guide -> EcranGuide(onRetour = { retour() })
+
+                    Ecran.Nouveautes -> EcranNouveautes(onRetour = { retour() })
+
                     Ecran.Plus -> EcranPlus(
                         verrou = verrou,
                         onRetour = { retour() },
                         onModifierMethode = { pile.add(Ecran.VerifierAvantModification) },
-                        onGardeFou = { pile.add(Ecran.GardeFou) }
+                        onGardeFou = { pile.add(Ecran.GardeFou) },
+                        onMisesAJour = { pile.add(Ecran.MisesAJour) },
+                        onGuide = { pile.add(Ecran.Guide) },
+                        onNouveautes = { pile.add(Ecran.Nouveautes) }
                     )
 
                     Ecran.GardeFou -> EcranGardeFou(onRetour = { retour() })

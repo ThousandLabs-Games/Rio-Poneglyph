@@ -89,7 +89,6 @@ fun detailNoeud(n: Noeud): String = when (n.type) {
 
 /** Message à afficher si l'élément ne peut pas encore être ouvert, sinon null. */
 fun messageNonOuvrable(n: Noeud): String? = when (n.type) {
-    TypeNoeud.CHAPITRE -> "Le lecteur de pages arrive avec la prochaine version."
     TypeNoeud.FICHIER -> "Ce type de fichier ne s'ouvre pas dans Rio Poneglyph. Vous pouvez l'exporter."
     else -> null
 }
