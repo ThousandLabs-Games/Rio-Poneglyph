@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+        Échange local avec Will of D : permission accordée uniquement aux applications
+        signées avec la même clé Thousand Labs. Déclarée dans les deux applications.
+    -->
+    <permission
+        android:name="com.thousandlabs.permission.DEPOT_WILL_OF_D"
+        android:label="Lecture du dépôt Will of D"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.thousandlabs.permission.DEPOT_WILL_OF_D" />
+
+    <queries>
+        <package android:name="com.thousandlabs.willofd" />
+        <provider android:authorities="com.thousandlabs.willofd.depot" />
+    </queries>
+
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <!-- Utilisé uniquement pendant la fenêtre de 2 minutes ouverte depuis « Mises à jour ». -->
     <uses-permission android:name="android.permission.INTERNET" />

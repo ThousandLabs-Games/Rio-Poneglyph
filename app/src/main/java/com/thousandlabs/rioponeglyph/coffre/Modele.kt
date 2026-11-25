@@ -25,7 +25,11 @@ data class Noeud(
     val duree: Long = 0L,
     val pages: List<Page> = emptyList(),
     val sens: String = "",
-    val systeme: Boolean = false
+    val systeme: Boolean = false,
+    /** Clé de continuité fournie par Will of D (série ou chapitre) ; vide pour un import manuel. */
+    val cle: String = "",
+    /** Numéro de chapitre ou d'épisode (-1 si inconnu), utilisé pour l'ordre et la suite. */
+    val numero: Double = -1.0
 ) {
     val estDossier: Boolean get() = type == TypeNoeud.DOSSIER
     val nomComplet: String get() = if (extension.isEmpty()) nom else "$nom.$extension"
@@ -51,6 +55,8 @@ data class Noeud(
         put("duree", duree)
         put("sens", sens)
         put("systeme", systeme)
+        put("cle", cle)
+        put("numero", numero)
         put("pages", JSONArray().apply {
             pages.forEach { p ->
                 put(JSONObject().apply {
@@ -84,7 +90,9 @@ data class Noeud(
                 duree = o.optLong("duree"),
                 pages = pages,
                 sens = o.optString("sens"),
-                systeme = o.optBoolean("systeme")
+                systeme = o.optBoolean("systeme"),
+                cle = o.optString("cle"),
+                numero = o.optDouble("numero", -1.0).takeUnless { it.isNaN() } ?: -1.0
             )
         }
     }

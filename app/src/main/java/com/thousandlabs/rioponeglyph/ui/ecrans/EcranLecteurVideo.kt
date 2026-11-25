@@ -32,6 +32,7 @@ import androidx.compose.material.icons.outlined.Forward10
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Replay10
+import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -73,6 +74,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.ui.PlayerView
 import com.thousandlabs.rioponeglyph.coffre.Coffre
 import com.thousandlabs.rioponeglyph.coffre.Positions
@@ -97,7 +99,7 @@ private fun libelleVitesse(v: Float): String =
 
 @OptIn(UnstableApi::class)
 @Composable
-fun EcranLecteurVideo(id: String, onRetour: () -> Unit) {
+fun EcranLecteurVideo(id: String, onRetour: () -> Unit, onSuivant: (com.thousandlabs.rioponeglyph.coffre.Noeud) -> Unit = {}) {
     val contexte = LocalContext.current
     val activite = remember { contexte.activite() }
     val noeud = remember(id) { Coffre.noeud(id) }
@@ -110,7 +112,9 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit) {
         ExoPlayer.Builder(contexte).build().apply {
             val cle = Coffre.cle()
             val fabrique = DataSource.Factory { SourceChiffree(cle) }
-            val source = ProgressiveMediaSource.Factory(fabrique)
+            // Recherche dans les flux sans index (TS issus de flux HLS, MP3, AAC) : vidéos de Will of D comprises.
+            val extracteurs = DefaultExtractorsFactory().setConstantBitrateSeekingEnabled(true)
+            val source = ProgressiveMediaSource.Factory(fabrique, extracteurs)
                 .createMediaSource(MediaItem.fromUri(Uri.fromFile(Coffre.fichierObjet(id))))
             val reprise = Positions.lire(contexte, id)
             setMediaSource(source, if (noeud.duree <= 0 || reprise < noeud.duree - 5_000) reprise else 0L)
@@ -164,14 +168,37 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit) {
     }
 
     var erreur by remember { mutableStateOf<String?>(null) }
+    val suivant = remember(id) { Coffre.suivant(id) }
+    var termine by remember { mutableStateOf(false) }
+    var compteRebours by remember { mutableStateOf<Int?>(null) }
     DisposableEffect(lecteur) {
         val ecouteur = object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                termine = playbackState == Player.STATE_ENDED
+            }
+
             override fun onPlayerError(error: PlaybackException) {
                 erreur = "Lecture impossible (${error.errorCodeName}). Le format de cette vidéo n'est peut-être pas pris en charge."
             }
         }
         lecteur.addListener(ecouteur)
         onDispose { lecteur.removeListener(ecouteur) }
+    }
+
+    LaunchedEffect(termine) {
+        if (!termine || suivant == null) {
+            compteRebours = null
+            return@LaunchedEffect
+        }
+        compteRebours = 5
+        while (true) {
+            val reste = compteRebours ?: return@LaunchedEffect
+            if (reste <= 0) break
+            delay(1000)
+            if (compteRebours == null) return@LaunchedEffect
+            compteRebours = reste - 1
+        }
+        onSuivant(suivant)
     }
 
     var position by remember { mutableLongStateOf(0L) }
@@ -304,6 +331,43 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit) {
                     .background(Color.Black.copy(alpha = 0.75f))
                     .padding(16.dp)
             )
+        }
+
+        // Épisode suivant du même dossier, lancé automatiquement après 5 secondes.
+        if (termine && suivant != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Black.copy(alpha = 0.8f))
+                    .padding(16.dp)
+            ) {
+                Text(
+                    if (compteRebours != null) "Épisode suivant dans ${compteRebours} s" else "Épisode suivant",
+                    color = Color.White.copy(alpha = 0.75f),
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Text(
+                    suivant.nom,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .padding(vertical = 6.dp)
+                        .width(220.dp)
+                )
+                Row {
+                    if (compteRebours != null) {
+                        TextButton(onClick = { compteRebours = null }) { Text("Annuler", color = Color.White) }
+                    }
+                    TextButton(onClick = { onSuivant(suivant) }) {
+                        Icon(Icons.Outlined.SkipNext, contentDescription = null, tint = Color.White)
+                        Text(" Lire", color = Color.White)
+                    }
+                }
+            }
         }
 
         AnimatedVisibility(controles, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.fillMaxSize()) {

@@ -200,6 +200,54 @@ object Coffre {
     private fun normaliser(t: String): String =
         Normalizer.normalize(t, Normalizer.Form.NFD).replace(Regex("\\p{Mn}+"), "").lowercase()
 
+    /**
+     * Élément suivant du même type dans le même dossier (chapitre ou épisode suivant) :
+     * ordre par numéro quand il est connu, sinon ordre naturel des noms.
+     */
+    fun suivant(id: String): Noeud? = synchronized(verrou) {
+        val n = noeuds[id] ?: return null
+        val freres = noeuds.values.filter { it.parent == n.parent && it.type == n.type }
+            .sortedWith(ordreSuite)
+        val i = freres.indexOfFirst { it.id == id }
+        if (i < 0 || i >= freres.lastIndex) null else freres[i + 1]
+    }
+
+    /** Ordre de lecture : numéro (si connu) puis nom naturel. */
+    val ordreSuite: Comparator<Noeud> = Comparator { a, b ->
+        if (a.numero >= 0 && b.numero >= 0 && a.numero != b.numero) a.numero.compareTo(b.numero)
+        else TriNaturel.compare(a.nom, b.nom)
+    }
+
+    /** Premier élément portant cette clé de continuité, où qu'il ait été déplacé. */
+    fun parCle(cle: String, type: TypeNoeud): Noeud? {
+        if (cle.isBlank()) return null
+        return synchronized(verrou) { noeuds.values.firstOrNull { it.cle == cle && it.type == type } }
+    }
+
+    /** Dossier d'une série (retrouvé par sa clé même s'il a été renommé ou déplacé), créé au besoin. */
+    fun dossierSerie(parentParDefaut: String, cle: String, nom: String): Noeud = modifier { map ->
+        map.values.firstOrNull { it.type == TypeNoeud.DOSSIER && cle.isNotBlank() && it.cle == cle }
+            ?: run {
+                val propre = nettoyerNom(nom)
+                val d = Noeud(nouvelId(), parentParDefaut, nomUnique(map, parentParDefaut, propre, "", null), TypeNoeud.DOSSIER, cle = cle)
+                map[d.id] = d
+                d
+            }
+    }
+
+    /**
+     * Ajoute à un chapitre existant les pages d'une suite téléchargée plus tard.
+     * Les pages déjà présentes (même empreinte) sont ignorées ; renvoie les objets non retenus.
+     */
+    fun completerChapitre(id: String, ajout: List<Page>): List<String> = modifier { map ->
+        val n = map[id] ?: throw IllegalArgumentException("Chapitre introuvable")
+        val connues = n.pages.map { it.empreinte }.toHashSet()
+        val retenues = ajout.filter { connues.add(it.empreinte) }
+        val toutes = n.pages + retenues
+        map[id] = n.copy(pages = toutes, taille = toutes.sumOf { it.taille })
+        ajout.filter { it !in retenues }.map { it.objet }
+    }
+
     fun rechercher(texte: String): List<Noeud> {
         val cible = normaliser(texte.trim())
         if (cible.isEmpty()) return emptyList()

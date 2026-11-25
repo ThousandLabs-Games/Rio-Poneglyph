@@ -25,9 +25,9 @@ object Importation {
     private const val MARGE_ESPACE = 150L * 1024 * 1024
     const val NOM_MANIFESTE = "poneglyph.json"
 
-    private class Source(val uri: Uri, val nom: String, val taille: Long, val mime: String)
+    internal class Source(val uri: Uri, val nom: String, val taille: Long, val mime: String)
 
-    private class Objet(val id: String, val taille: Long, val empreinte: String)
+    internal class Objet(val id: String, val taille: Long, val empreinte: String)
 
     // ------------------------------------------------------------------ Fichiers
 
@@ -191,7 +191,7 @@ object Importation {
 
     // ------------------------------------------------------------------ Outils
 
-    private fun chiffrerSource(
+    internal fun chiffrerSource(
         context: Context,
         s: Source,
         crees: MutableList<File>,
@@ -218,7 +218,7 @@ object Importation {
         return Objet(id, resultat.taille, resultat.empreinte)
     }
 
-    private fun enregistrerMiniature(image: Bitmap, crees: MutableList<File>): String {
+    internal fun enregistrerMiniature(image: Bitmap, crees: MutableList<File>): String {
         val sortie = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 82, sortie)
         image.recycle()
@@ -229,7 +229,7 @@ object Importation {
         return id
     }
 
-    private fun decoderReduit(resolver: ContentResolver, uri: Uri, cote: Int): Bitmap? {
+    internal fun decoderReduit(resolver: ContentResolver, uri: Uri, cote: Int): Bitmap? {
         val limites = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, limites) }
         if (limites.outWidth <= 0 || limites.outHeight <= 0) return null
@@ -239,7 +239,7 @@ object Importation {
         return resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
     }
 
-    private fun verifierEspace(context: Context, taille: Long) {
+    internal fun verifierEspace(context: Context, taille: Long) {
         if (taille <= 0) return
         val libre = context.filesDir.usableSpace
         if (libre < taille + MARGE_ESPACE) throw IOException("espace insuffisant sur le téléphone")
@@ -327,7 +327,7 @@ object Importation {
         } else nom to ""
     }
 
-    private fun typeDe(mime: String, ext: String): TypeNoeud {
+    internal fun typeDe(mime: String, ext: String): TypeNoeud {
         val e = ext.lowercase()
         return when {
             mime.startsWith("video/") || e in EXT_VIDEO -> TypeNoeud.VIDEO

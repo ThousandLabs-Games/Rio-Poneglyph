@@ -71,7 +71,7 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EcranAccueil(onPlus: () -> Unit, onVerrouiller: () -> Unit, onOuvrir: (Noeud) -> Unit) {
+fun EcranAccueil(onPlus: () -> Unit, onVerrouiller: () -> Unit, onOuvrir: (Noeud) -> Unit, onWillOfD: () -> Unit) {
     val contexte = LocalContext.current
     val portee = rememberCoroutineScope()
     val messages = remember { SnackbarHostState() }
@@ -129,6 +129,10 @@ fun EcranAccueil(onPlus: () -> Unit, onVerrouiller: () -> Unit, onOuvrir: (Noeud
                     DropdownMenuItem(
                         text = { Text("Dossier de pages vers Pages") },
                         onClick = { menuImport = false; destinationImport = Coffre.ID_PAGES; importeurs.dossier() }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Depuis Will of D") },
+                        onClick = { menuImport = false; onWillOfD() }
                     )
                 }
             }

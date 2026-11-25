@@ -1,12 +1,12 @@
-## Rio Poneglyph 1.0.0
+## Rio Poneglyph 1.1.0
 
-Première version complète.
+Compatibilité avec Will of D, le navigateur sécurisé de Thousand Labs Games.
 
-- Lecteur de pages : défilement vertical (webtoon), planche par planche (gauche-droite ou droite-gauche pour les mangas), aperçu de toutes les pages.
-- Reprise à la dernière page lue, zoom à deux doigts et par double appui, saut rapide par la barre de pages.
-- Mises à jour intégrées : bouton « Activer l'accès Internet (2 minutes) », recherche automatique, téléchargement depuis le dépôt officiel, vérification de la signature, coupure de l'accès dès la fin.
-- Guide « Comment faire » intégré et écran Nouveautés.
+- Récupération depuis Will of D : Importer, puis « Depuis Will of D ». Échange local à sens unique, réservé aux applications signées par Thousand Labs ; chaque élément est chiffré et vérifié, puis retiré de Will of D.
+- Rangement automatique par série dans Videos et Pages ; les suites d'un même chapitre (page 2, partie suivante) sont fusionnées sans doublon.
+- Lecteur de pages : bouton « Chapitre suivant » à la dernière page.
+- Lecteur vidéo : épisode suivant automatique après 5 secondes, recherche précise dans les vidéos issues de flux de streaming (format TS).
 
-Rappel des versions précédentes : coffre chiffré, importation par déplacement vérifiée, dossiers et sous-dossiers, lecteur vidéo, garde-fou, verrouillage PIN, schéma, mot de passe et empreinte.
+Rappel des versions précédentes : lecteur de pages, mises à jour intégrées, coffre chiffré, importation par déplacement vérifiée, lecteur vidéo, garde-fou, verrouillage PIN, schéma, mot de passe et empreinte.
 
 Dépôt officiel : https://github.com/ThousandLabs-Games/Rio-Poneglyph

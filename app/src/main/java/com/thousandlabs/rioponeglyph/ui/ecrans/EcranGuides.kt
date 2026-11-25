@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.MoveToInbox
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Movie
 import androidx.compose.material.icons.outlined.NewReleases
@@ -70,6 +71,17 @@ private val GUIDE = listOf(
         )
     ),
     Rubrique(
+        Icons.Outlined.MoveToInbox, "Récupérer depuis Will of D",
+        listOf(
+            "Téléchargez vos vidéos et chapitres dans Will of D, le navigateur sécurisé de Thousand Labs Games.",
+            "Dans Rio Poneglyph, appuyez sur Importer puis « Depuis Will of D ». La liste des éléments terminés s'affiche.",
+            "Cochez ce que vous voulez récupérer, puis appuyez sur Récupérer. Chaque élément est chiffré et vérifié dans le coffre.",
+            "Les vidéos vont dans Videos et les chapitres dans Pages, rangés dans un dossier par série. Ce dossier est retrouvé même si vous l'avez renommé ou déplacé.",
+            "Une suite d'un chapitre déjà présent (page 2, partie suivante) est ajoutée au même chapitre, sans doublon.",
+            "Une fois récupéré, l'élément disparaît de Will of D. L'échange se fait uniquement sur le téléphone, jamais par Internet, et Rio Poneglyph n'envoie rien vers Will of D."
+        )
+    ),
+    Rubrique(
         Icons.Outlined.Folder, "Organiser vos dossiers",
         listOf(
             "Créez un dossier personnel depuis l'accueil, ou un sous-dossier avec l'icône de dossier en haut d'un dossier.",
@@ -95,7 +107,8 @@ private val GUIDE = listOf(
             "Touchez l'écran pour afficher les commandes. Faites glisser la barre pour aller à un moment précis.",
             "Double appui à gauche ou à droite : recul ou avance de 10 secondes.",
             "Glissement vertical à gauche : luminosité. Glissement vertical à droite : volume.",
-            "Le bouton Vitesse permet de lire de 0,5x à 2x."
+            "Le bouton Vitesse permet de lire de 0,5x à 2x.",
+            "À la fin d'une vidéo, l'épisode suivant du même dossier se lance après 5 secondes. Touchez Annuler pour rester."
         )
     ),
     Rubrique(
@@ -105,7 +118,8 @@ private val GUIDE = listOf(
             "Trois modes en haut de l'écran : défilement vertical (webtoon), planche par planche, aperçu de toutes les pages.",
             "En mode planche par planche, choisissez le sens : de gauche à droite, ou de droite à gauche pour les mangas.",
             "Zoom à deux doigts ou par double appui sur une planche. Touchez l'écran pour afficher ou masquer les commandes.",
-            "Dans l'aperçu, touchez une page pour y aller directement."
+            "Dans l'aperçu, touchez une page pour y aller directement.",
+            "À la dernière page, le bouton « Chapitre suivant » ouvre le chapitre suivant du même dossier."
         )
     ),
     Rubrique(
@@ -149,6 +163,15 @@ private val GUIDE = listOf(
 private class Version(val numero: String, val points: List<String>)
 
 private val NOUVEAUTES = listOf(
+    Version(
+        "1.1.0",
+        listOf(
+            "Récupération depuis Will of D : Importer puis « Depuis Will of D », échange local à sens unique protégé par la signature Thousand Labs.",
+            "Rangement automatique par série dans Videos et Pages, et fusion sans doublon des suites d'un même chapitre.",
+            "Lecteur de pages : bouton « Chapitre suivant » à la dernière page.",
+            "Lecteur vidéo : épisode suivant automatique, recherche précise dans les vidéos issues de flux de streaming (format TS)."
+        )
+    ),
     Version(
         "1.0.0",
         listOf(

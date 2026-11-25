@@ -26,7 +26,9 @@ Le contenu du coffre est chiffré avec une clé liée à ce téléphone. Une dé
 - À l'importation, l'original n'est supprimé qu'après relecture complète et comparaison d'empreinte SHA-256.
 - Renommer ou déplacer ne touche jamais au contenu chiffré.
 
-Format des chapitres : voir [FORMAT_PAGES.md](FORMAT_PAGES.md).
+Format des chapitres et échange avec Will of D : voir [FORMAT_PAGES.md](FORMAT_PAGES.md).
+
+Will of D : https://github.com/ThousandLabs-Games/Will-of-D
 
 ## Fonctionnalités
 
@@ -38,6 +40,7 @@ Format des chapitres : voir [FORMAT_PAGES.md](FORMAT_PAGES.md).
 | Lecteur vidéo intégré, visionneuse d'images | Version 0.2 |
 | Garde-fou : exportation complète et vérification d'intégrité | Version 0.2 |
 | Lecteur de pages : défilement vertical, planche par planche, aperçu | Version 1.0 |
+| Récupération depuis Will of D, rangement par série, chapitre et épisode suivants | Version 1.1 |
 | Mises à jour intégrées (accès Internet de 2 minutes, signature vérifiée) | Version 1.0 |
 | Guide « Comment faire » et Nouveautés intégrés | Version 1.0 |
 

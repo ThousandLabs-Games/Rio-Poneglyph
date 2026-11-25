@@ -42,6 +42,7 @@ import com.thousandlabs.rioponeglyph.ui.ecrans.EcranLecteurVideo
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranOuverture
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranPlus
 import com.thousandlabs.rioponeglyph.ui.ecrans.EcranVerrou
+import com.thousandlabs.rioponeglyph.ui.ecrans.EcranWillOfD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -58,6 +59,7 @@ private sealed interface Ecran {
     data object MisesAJour : Ecran
     data object Guide : Ecran
     data object Nouveautes : Ecran
+    data object WillOfD : Ecran
 }
 
 @Composable
@@ -83,6 +85,12 @@ fun RioRoot(verrou: GestionVerrou) {
             TypeNoeud.CHAPITRE -> pile.add(Ecran.Pages(n.id))
             else -> Unit
         }
+    }
+
+    /** Passe au chapitre ou à l'épisode suivant sans empiler d'écran supplémentaire. */
+    fun remplacer(n: Noeud) {
+        if (pile.size > 1) pile.removeAt(pile.lastIndex)
+        ouvrir(n)
     }
 
     LaunchedEffect(deverrouille) {
@@ -140,7 +148,8 @@ fun RioRoot(verrou: GestionVerrou) {
                     Ecran.Accueil -> EcranAccueil(
                         onPlus = { pile.add(Ecran.Plus) },
                         onVerrouiller = { Session.verrouiller() },
-                        onOuvrir = { ouvrir(it) }
+                        onOuvrir = { ouvrir(it) },
+                        onWillOfD = { pile.add(Ecran.WillOfD) }
                     )
 
                     is Ecran.Dossier -> EcranDossier(
@@ -150,17 +159,19 @@ fun RioRoot(verrou: GestionVerrou) {
                         onPlus = { pile.add(Ecran.Plus) }
                     )
 
-                    is Ecran.Video -> EcranLecteurVideo(id = ecran.id, onRetour = { retour() })
+                    is Ecran.Video -> EcranLecteurVideo(id = ecran.id, onRetour = { retour() }, onSuivant = { remplacer(it) })
 
                     is Ecran.Image -> EcranImage(id = ecran.id, onRetour = { retour() })
 
-                    is Ecran.Pages -> EcranLecteurPages(id = ecran.id, onRetour = { retour() })
+                    is Ecran.Pages -> EcranLecteurPages(id = ecran.id, onRetour = { retour() }, onSuivant = { remplacer(it) })
 
                     Ecran.MisesAJour -> EcranMisesAJour(onRetour = { retour() })
 
                     Ecran.Guide -> EcranGuide(onRetour = { retour() })
 
                     Ecran.Nouveautes -> EcranNouveautes(onRetour = { retour() })
+
+                    Ecran.WillOfD -> EcranWillOfD(onRetour = { retour() })
 
                     Ecran.Plus -> EcranPlus(
                         verrou = verrou,

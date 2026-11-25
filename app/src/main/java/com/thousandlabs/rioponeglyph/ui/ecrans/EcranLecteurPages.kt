@@ -39,10 +39,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material.icons.outlined.ViewDay
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -149,7 +151,7 @@ private fun modeInitial(sens: String): Pair<ModeLecture, Boolean> = when (sens.l
 }
 
 @Composable
-fun EcranLecteurPages(id: String, onRetour: () -> Unit) {
+fun EcranLecteurPages(id: String, onRetour: () -> Unit, onSuivant: (com.thousandlabs.rioponeglyph.coffre.Noeud) -> Unit = {}) {
     val contexte = LocalContext.current
     val noeud = remember(id) { Coffre.noeud(id) }
     if (noeud == null || noeud.pages.isEmpty()) {
@@ -157,6 +159,7 @@ fun EcranLecteurPages(id: String, onRetour: () -> Unit) {
         return
     }
     val pages = noeud.pages
+    val suivant = remember(id) { Coffre.suivant(id) }
     val clePosition = "pages:$id"
     val reprise = remember { Positions.lire(contexte, clePosition).toInt().coerceIn(0, pages.lastIndex) }
     val (modeDepart, rtlDepart) = remember { modeInitial(noeud.sens) }
@@ -299,6 +302,19 @@ fun EcranLecteurPages(id: String, onRetour: () -> Unit) {
                         )
                     }
                 }
+            }
+        }
+
+        // Continuité : à la dernière page, accès direct au chapitre suivant du même dossier.
+        if (mode != ModeLecture.FICHE && suivant != null && pageCourante == pages.lastIndex) {
+            Button(
+                onClick = { onSuivant(suivant) },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 72.dp, start = 24.dp, end = 24.dp)
+            ) {
+                Text("Chapitre suivant : ${suivant.nom}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null, modifier = Modifier.padding(start = 8.dp).size(18.dp))
             }
         }
 
