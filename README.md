@@ -37,4 +37,4 @@ Le contenu du coffre est chiffré avec une clé liée à ce téléphone. Une dé
 
 ## Compilation
 
-La compilation est automatique (GitHub Actions) à chaque modification. Une Release est publiée pour chaque étiquette `vX.Y.Z`.
+La compilation est automatique (GitHub Actions) à chaque modification. Une Release est publiée automatiquement à chaque nouveau numéro de version.

@@ -3,7 +3,6 @@ name: Compilation Android
 on:
   push:
     branches: [main]
-    tags: ['v*']
   workflow_dispatch:
 
 # Déclaré ici car l'organisation impose la lecture seule par défaut.
@@ -53,6 +52,18 @@ jobs:
           NOM="Rio-Poneglyph-$VERSION.apk"
           cp app/build/outputs/apk/release/app-release.apk "$NOM"
           echo "nom=$NOM" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Version déjà publiée ?
+        id: publiee
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "v${{ steps.apk.outputs.version }}" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "oui=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "oui=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Archivage de l'APK
         uses: actions/upload-artifact@v4
@@ -61,11 +72,13 @@ jobs:
           path: ${{ steps.apk.outputs.nom }}
 
       - name: Publication de la Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: steps.publiee.outputs.oui == 'false'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.apk.outputs.version }}
+          target_commitish: ${{ github.sha }}
           files: ${{ steps.apk.outputs.nom }}
-          name: Rio Poneglyph ${{ github.ref_name }}
+          name: Rio Poneglyph ${{ steps.apk.outputs.version }}
           body_path: NOUVEAUTES.md
 
       - name: Nettoyage de la clé
