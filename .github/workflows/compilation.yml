@@ -59,7 +59,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "v${{ steps.apk.outputs.version }}" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          # Un brouillon resté d'une publication interrompue ne compte pas comme publié.
+          BROUILLON=$(gh release view "v${{ steps.apk.outputs.version }}" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft' 2>/dev/null || echo "absente")
+          if [ "$BROUILLON" = "false" ]; then
             echo "oui=true" >> "$GITHUB_OUTPUT"
           else
             echo "oui=false" >> "$GITHUB_OUTPUT"
@@ -80,6 +82,8 @@ jobs:
           files: ${{ steps.apk.outputs.nom }}
           name: Rio Poneglyph ${{ steps.apk.outputs.version }}
           body_path: NOUVEAUTES.md
+          draft: false
+          make_latest: true
 
       - name: Nettoyage de la clé
         if: always()
