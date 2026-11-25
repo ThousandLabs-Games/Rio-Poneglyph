@@ -16,7 +16,17 @@ Les mises à jour s'installent par-dessus la version existante sans perte de don
 
 ## Avant de désinstaller
 
-Le contenu du coffre est chiffré avec une clé liée à ce téléphone. Une désinstallation ou un effacement des données de l'application supprime définitivement le coffre. Exportez d'abord vos fichiers.
+Le contenu du coffre est chiffré avec une clé liée à ce téléphone. Une désinstallation ou un effacement des données de l'application supprime définitivement le coffre. Utilisez d'abord **Réglages → Garde-fou du coffre → Exporter tout le coffre**.
+
+## Sécurité des données
+
+- Contenu chiffré en AES-256 (mode CTR, lecture vidéo à la volée sans fichier en clair).
+- Clé du coffre protégée par le module de sécurité du téléphone (Android Keystore).
+- Noms et arborescence chiffrés (AES-GCM), enregistrés deux fois de façon atomique.
+- À l'importation, l'original n'est supprimé qu'après relecture complète et comparaison d'empreinte SHA-256.
+- Renommer ou déplacer ne touche jamais au contenu chiffré.
+
+Format des chapitres : voir [FORMAT_PAGES.md](FORMAT_PAGES.md).
 
 ## Fonctionnalités
 
@@ -24,8 +34,9 @@ Le contenu du coffre est chiffré avec une clé liée à ce téléphone. Une dé
 |---|---|
 | Ouverture animée, verrouillage PIN / schéma / mot de passe / empreinte | Version 0.1 |
 | Blocage temporaire, verrouillage automatique, captures bloquées | Version 0.1 |
-| Coffre chiffré, importation par déplacement, dossiers et sous-dossiers | Prochaine version |
-| Lecteur vidéo intégré | À venir |
+| Coffre chiffré, importation par déplacement, dossiers et sous-dossiers | Version 0.2 |
+| Lecteur vidéo intégré, visionneuse d'images | Version 0.2 |
+| Garde-fou : exportation complète et vérification d'intégrité | Version 0.2 |
 | Lecteur de pages (mangas, webtoons) | À venir |
 | Mises à jour intégrées depuis les Releases | À venir |
 

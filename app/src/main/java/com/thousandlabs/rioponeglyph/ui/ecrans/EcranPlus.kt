@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.HealthAndSafety
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Shield
@@ -52,7 +53,7 @@ const val URL_DEPOT = "https://github.com/ThousandLabs-Games/Rio-Poneglyph"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: () -> Unit) {
+fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: () -> Unit, onGardeFou: () -> Unit) {
     val contexte = LocalContext.current
     val biometrieDisponible = remember { Biometrie.disponible(contexte) }
     var biometrie by remember { mutableStateOf(verrou.biometrieActive && biometrieDisponible) }
@@ -123,6 +124,16 @@ fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: ()
             LigneReglage(Icons.Outlined.Timer, "Blocage temporaire", "Après 5 tentatives échouées, durée croissante")
             LigneReglage(Icons.Outlined.Shield, "Verrouillage automatique", "Dès que l'application passe en arrière-plan")
             LigneReglage(Icons.Outlined.VisibilityOff, "Confidentialité", "Captures d'écran bloquées, aperçu masqué dans les applications récentes")
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            TitreSection("Coffre")
+            LigneReglage(
+                Icons.Outlined.HealthAndSafety, "Garde-fou du coffre",
+                "État du coffre, exportation complète et vérification avant désinstallation",
+                onClic = onGardeFou,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
 
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
 
