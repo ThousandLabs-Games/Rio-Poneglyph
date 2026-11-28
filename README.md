@@ -44,6 +44,7 @@ Will of D : https://github.com/ThousandLabs-Games/Will-of-D
 | Mises à jour intégrées (accès Internet de 2 minutes, signature vérifiée) | Version 1.0 |
 | Guide « Comment faire » et Nouveautés intégrés | Version 1.0 |
 | Icône plein cadre et animation d'ouverture tirée de la même pierre | Version 1.1.1 |
+| Réglages : style et durée d'animation, verrouillage en arrière-plan avec délai, confidentialité et fonctions des lecteurs activables | Version 1.2 |
 
 ## Confidentialité
 

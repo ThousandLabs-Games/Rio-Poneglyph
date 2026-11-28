@@ -85,6 +85,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.thousandlabs.rioponeglyph.Reglages
 import com.thousandlabs.rioponeglyph.coffre.Coffre
 import com.thousandlabs.rioponeglyph.coffre.FormatChiffre
 import com.thousandlabs.rioponeglyph.coffre.Page
@@ -306,7 +307,7 @@ fun EcranLecteurPages(id: String, onRetour: () -> Unit, onSuivant: (com.thousand
         }
 
         // Continuité : à la dernière page, accès direct au chapitre suivant du même dossier.
-        if (mode != ModeLecture.FICHE && suivant != null && pageCourante == pages.lastIndex) {
+        if (Reglages.chapitreSuivant && mode != ModeLecture.FICHE && suivant != null && pageCourante == pages.lastIndex) {
             Button(
                 onClick = { onSuivant(suivant) },
                 modifier = Modifier

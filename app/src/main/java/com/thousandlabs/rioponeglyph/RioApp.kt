@@ -13,11 +13,16 @@ class RioApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Reglages.init(this)
         verrou = GestionVerrou(this)
-        // Verrouillage dès que l'application quitte l'écran.
+        // Verrouillage quand l'application quitte l'écran (immédiat ou différé selon les réglages).
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             LifecycleEventObserver { _, evenement ->
-                if (evenement == Lifecycle.Event.ON_STOP) Session.surPassageArrierePlan()
+                when (evenement) {
+                    Lifecycle.Event.ON_STOP -> Session.surPassageArrierePlan()
+                    Lifecycle.Event.ON_START -> Session.surRetourPremierPlan()
+                    else -> Unit
+                }
             }
         )
     }

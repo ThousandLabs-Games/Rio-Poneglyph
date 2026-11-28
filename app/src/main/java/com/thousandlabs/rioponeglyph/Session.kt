@@ -1,5 +1,6 @@
 package com.thousandlabs.rioponeglyph
 
+import android.os.SystemClock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +34,20 @@ object Session {
         suspensions.updateAndGet { if (it > 0) it - 1 else 0 }
     }
 
+    /** Moment du passage en arrière-plan (0 si aucun verrouillage différé n'est en attente). */
+    @Volatile
+    private var arrierePlanDepuis = 0L
+
     fun surPassageArrierePlan() {
-        if (suspensions.get() == 0) verrouiller()
+        if (suspensions.get() != 0 || !Reglages.verrouArrierePlan) return
+        if (Reglages.delaiVerrou.ms == 0L) verrouiller()
+        else arrierePlanDepuis = SystemClock.elapsedRealtime()
+    }
+
+    fun surRetourPremierPlan() {
+        val depuis = arrierePlanDepuis
+        arrierePlanDepuis = 0L
+        if (depuis == 0L || !Reglages.verrouArrierePlan) return
+        if (SystemClock.elapsedRealtime() - depuis >= Reglages.delaiVerrou.ms) verrouiller()
     }
 }

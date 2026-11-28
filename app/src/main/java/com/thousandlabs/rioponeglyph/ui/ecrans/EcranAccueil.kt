@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.thousandlabs.rioponeglyph.Reglages
 import com.thousandlabs.rioponeglyph.coffre.Coffre
 import com.thousandlabs.rioponeglyph.coffre.Noeud
 import com.thousandlabs.rioponeglyph.coffre.Operations
@@ -130,10 +131,12 @@ fun EcranAccueil(onPlus: () -> Unit, onVerrouiller: () -> Unit, onOuvrir: (Noeud
                         text = { Text("Dossier de pages vers Pages") },
                         onClick = { menuImport = false; destinationImport = Coffre.ID_PAGES; importeurs.dossier() }
                     )
-                    DropdownMenuItem(
-                        text = { Text("Depuis Will of D") },
-                        onClick = { menuImport = false; onWillOfD() }
-                    )
+                    if (Reglages.willOfD) {
+                        DropdownMenuItem(
+                            text = { Text("Depuis Will of D") },
+                            onClick = { menuImport = false; onWillOfD() }
+                        )
+                    }
                 }
             }
         }

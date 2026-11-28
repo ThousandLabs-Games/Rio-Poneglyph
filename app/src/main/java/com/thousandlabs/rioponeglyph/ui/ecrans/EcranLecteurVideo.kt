@@ -76,6 +76,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.ui.PlayerView
+import com.thousandlabs.rioponeglyph.Reglages
 import com.thousandlabs.rioponeglyph.coffre.Coffre
 import com.thousandlabs.rioponeglyph.coffre.Positions
 import com.thousandlabs.rioponeglyph.lecteur.SourceChiffree
@@ -116,7 +117,7 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit, onSuivant: (com.thousand
             val extracteurs = DefaultExtractorsFactory().setConstantBitrateSeekingEnabled(true)
             val source = ProgressiveMediaSource.Factory(fabrique, extracteurs)
                 .createMediaSource(MediaItem.fromUri(Uri.fromFile(Coffre.fichierObjet(id))))
-            val reprise = Positions.lire(contexte, id)
+            val reprise = if (Reglages.repriseVideo) Positions.lire(contexte, id) else 0L
             setMediaSource(source, if (noeud.duree <= 0 || reprise < noeud.duree - 5_000) reprise else 0L)
             prepare()
             playWhenReady = true
@@ -186,7 +187,7 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit, onSuivant: (com.thousand
     }
 
     LaunchedEffect(termine) {
-        if (!termine || suivant == null) {
+        if (!termine || suivant == null || !Reglages.episodeSuivantAuto) {
             compteRebours = null
             return@LaunchedEffect
         }
@@ -273,7 +274,8 @@ fun EcranLecteurVideo(id: String, onRetour: () -> Unit, onSuivant: (com.thousand
                         onDoubleTap = { o -> sauter(if (o.x < size.width / 2f) -10_000L else 10_000L) }
                     )
                 }
-                .pointerInput(Unit) {
+                .pointerInput(Reglages.gestesVideo) {
+                    if (!Reglages.gestesVideo) return@pointerInput
                     var cote = 0
                     var valeur = 0f
                     detectVerticalDragGestures(

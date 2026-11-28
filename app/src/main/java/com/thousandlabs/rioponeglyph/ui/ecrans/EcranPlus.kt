@@ -1,5 +1,26 @@
 package com.thousandlabs.rioponeglyph.ui.ecrans
 
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.HourglassTop
+import androidx.compose.material.icons.outlined.LockClock
+import androidx.compose.material.icons.outlined.MoveToInbox
+import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.SkipNext
+import androidx.compose.material.icons.outlined.Style
+import androidx.compose.material.icons.outlined.Swipe
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.thousandlabs.rioponeglyph.DelaiVerrou
+import com.thousandlabs.rioponeglyph.DureeAnimation
+import com.thousandlabs.rioponeglyph.MainActivity
+import com.thousandlabs.rioponeglyph.Reglages
+import com.thousandlabs.rioponeglyph.StyleAnimation
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -65,6 +86,32 @@ fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: ()
     val biometrieDisponible = remember { Biometrie.disponible(contexte) }
     var biometrie by remember { mutableStateOf(verrou.biometrieActive && biometrieDisponible) }
     var messageBiometrie by remember { mutableStateOf<String?>(null) }
+    var choix by remember { mutableStateOf<Choix?>(null) }
+    var apercu by remember { mutableStateOf(false) }
+
+    when (choix) {
+        Choix.STYLE -> DialogueChoix(
+            "Style d'animation", StyleAnimation.entries.map { it to "${it.libelle}\n${it.detail}" },
+            Reglages.styleAnimation, { Reglages.changerStyleAnimation(it) }, { choix = null }
+        )
+        Choix.DUREE -> DialogueChoix(
+            "Durée de l'animation", DureeAnimation.entries.map { it to it.libelle },
+            Reglages.dureeAnimation, { Reglages.changerDureeAnimation(it) }, { choix = null }
+        )
+        Choix.DELAI -> DialogueChoix(
+            "Délai avant verrouillage", DelaiVerrou.entries.map { it to it.libelle },
+            Reglages.delaiVerrou, { Reglages.changerDelaiVerrou(it) }, { choix = null }
+        )
+        null -> Unit
+    }
+    if (apercu) {
+        Dialog(
+            onDismissRequest = { apercu = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            EcranOuverture(onTermine = { apercu = false })
+        }
+    }
 
     fun basculerBiometrie(activer: Boolean) {
         if (!activer) {
@@ -128,9 +175,88 @@ fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: ()
                     )
                 }
             )
-            LigneReglage(Icons.Outlined.Timer, "Blocage temporaire", "Après 5 tentatives échouées, durée croissante")
-            LigneReglage(Icons.Outlined.Shield, "Verrouillage automatique", "Dès que l'application passe en arrière-plan")
-            LigneReglage(Icons.Outlined.VisibilityOff, "Confidentialité", "Captures d'écran bloquées, aperçu masqué dans les applications récentes")
+            LigneInterrupteur(
+                Icons.Outlined.Shield, "Verrouillage en arrière-plan",
+                if (Reglages.verrouArrierePlan) "Le coffre se verrouille quand vous quittez l'application"
+                else "Désactivé : le coffre reste ouvert jusqu'à fermeture ou verrouillage manuel",
+                Reglages.verrouArrierePlan, Reglages::changerVerrouArrierePlan
+            )
+            LigneReglage(
+                Icons.Outlined.LockClock, "Délai avant verrouillage", Reglages.delaiVerrou.libelle,
+                onClic = { choix = Choix.DELAI },
+                actif = Reglages.verrouArrierePlan,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+            LigneInterrupteur(
+                Icons.Outlined.VisibilityOff, "Confidentialité",
+                if (Reglages.confidentialite) "Captures d'écran bloquées, aperçu masqué dans les applications récentes"
+                else "Désactivée : captures d'écran et aperçu autorisés",
+                Reglages.confidentialite
+            ) {
+                Reglages.changerConfidentialite(it)
+                Biometrie.activite(contexte)?.let { a -> MainActivity.appliquerConfidentialite(a) }
+            }
+            LigneReglage(Icons.Outlined.Timer, "Blocage temporaire", "Toujours actif : après 5 tentatives échouées, durée croissante")
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            TitreSection("Ouverture")
+            LigneInterrupteur(
+                Icons.Outlined.AutoAwesome, "Animation d'ouverture",
+                if (Reglages.animationOuverture) "Le poneglyph s'illumine au lancement" else "Désactivée : ouverture directe",
+                Reglages.animationOuverture, Reglages::changerAnimationOuverture
+            )
+            LigneReglage(
+                Icons.Outlined.Style, "Style d'animation",
+                "${Reglages.styleAnimation.libelle} · ${Reglages.styleAnimation.detail}",
+                onClic = { choix = Choix.STYLE },
+                actif = Reglages.animationOuverture,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+            LigneReglage(
+                Icons.Outlined.HourglassTop, "Durée de l'animation", Reglages.dureeAnimation.libelle,
+                onClic = { choix = Choix.DUREE },
+                actif = Reglages.animationOuverture,
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+            LigneReglage(
+                Icons.Outlined.PlayCircle, "Revoir l'animation", "Aperçu avec le style et la durée choisis",
+                onClic = { apercu = true },
+                fin = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) }
+            )
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            TitreSection("Lecteurs")
+            LigneInterrupteur(
+                Icons.Outlined.SkipNext, "Épisode suivant automatique",
+                "Lance la vidéo suivante du dossier après 5 secondes",
+                Reglages.episodeSuivantAuto, Reglages::changerEpisodeSuivantAuto
+            )
+            LigneInterrupteur(
+                Icons.Outlined.History, "Reprise des vidéos",
+                "Reprend chaque vidéo là où vous l'aviez laissée",
+                Reglages.repriseVideo, Reglages::changerRepriseVideo
+            )
+            LigneInterrupteur(
+                Icons.Outlined.Swipe, "Gestes du lecteur vidéo",
+                "Glisser à gauche pour la luminosité, à droite pour le volume",
+                Reglages.gestesVideo, Reglages::changerGestesVideo
+            )
+            LigneInterrupteur(
+                Icons.AutoMirrored.Outlined.MenuBook, "Bouton « Chapitre suivant »",
+                "Affiché à la dernière page d'un chapitre",
+                Reglages.chapitreSuivant, Reglages::changerChapitreSuivant
+            )
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            TitreSection("Importation")
+            LigneInterrupteur(
+                Icons.Outlined.MoveToInbox, "Récupération depuis Will of D",
+                "Option « Depuis Will of D » dans le menu Importer",
+                Reglages.willOfD, Reglages::changerWillOfD
+            )
 
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
 
@@ -183,6 +309,65 @@ fun EcranPlus(verrou: GestionVerrou, onRetour: () -> Unit, onModifierMethode: ()
     }
 }
 
+private enum class Choix { STYLE, DUREE, DELAI }
+
+@Composable
+private fun <T> DialogueChoix(
+    titre: String,
+    options: List<Pair<T, String>>,
+    actuel: T,
+    onChoix: (T) -> Unit,
+    onFermer: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onFermer,
+        title = { Text(titre) },
+        text = {
+            Column {
+                options.forEach { (valeur, libelle) ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onChoix(valeur); onFermer() }
+                            .padding(vertical = 8.dp)
+                    ) {
+                        RadioButton(selected = valeur == actuel, onClick = { onChoix(valeur); onFermer() })
+                        Spacer(Modifier.width(8.dp))
+                        val lignes = libelle.split("\n")
+                        Column {
+                            Text(lignes[0], style = MaterialTheme.typography.bodyLarge)
+                            if (lignes.size > 1) {
+                                Text(
+                                    lignes[1],
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onFermer) { Text("Fermer") } }
+    )
+}
+
+@Composable
+private fun LigneInterrupteur(
+    icone: ImageVector,
+    titre: String,
+    detail: String,
+    valeur: Boolean,
+    onChange: (Boolean) -> Unit
+) {
+    LigneReglage(
+        icone, titre, detail,
+        onClic = { onChange(!valeur) },
+        fin = { Switch(checked = valeur, onCheckedChange = onChange) }
+    )
+}
+
 @Composable
 private fun TitreSection(titre: String) {
     Text(
@@ -199,12 +384,15 @@ private fun LigneReglage(
     titre: String,
     detail: String,
     onClic: (() -> Unit)? = null,
+    actif: Boolean = true,
     fin: (@Composable () -> Unit)? = null
 ) {
-    val base = Modifier.fillMaxWidth()
+    val base = Modifier
+        .fillMaxWidth()
+        .alpha(if (actif) 1f else 0.4f)
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = (if (onClic != null) base.clickable(onClick = onClic) else base)
+        modifier = (if (onClic != null && actif) base.clickable(onClick = onClic) else base)
             .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
         Icon(icone, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.thousandlabs.rioponeglyph.Reglages
 import com.thousandlabs.rioponeglyph.Session
 import com.thousandlabs.rioponeglyph.coffre.Coffre
 import com.thousandlabs.rioponeglyph.coffre.Noeud
@@ -66,7 +67,7 @@ private sealed interface Ecran {
 fun RioRoot(verrou: GestionVerrou) {
     val contexte = LocalContext.current
     val deverrouille by Session.deverrouille.collectAsState()
-    var introTerminee by remember { mutableStateOf(Session.introJouee) }
+    var introTerminee by remember { mutableStateOf(Session.introJouee || !Reglages.animationOuverture) }
     var configure by remember { mutableStateOf(verrou.estConfigure) }
     var coffrePret by remember { mutableStateOf(Coffre.estCharge) }
     var erreurCoffre by remember { mutableStateOf<String?>(null) }

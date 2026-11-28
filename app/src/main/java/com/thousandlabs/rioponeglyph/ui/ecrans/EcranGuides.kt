@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Movie
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.SystemUpdate
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -152,10 +153,22 @@ private val GUIDE = listOf(
     Rubrique(
         Icons.Outlined.Lock, "Sécurité et verrouillage",
         listOf(
-            "L'application se verrouille dès qu'elle passe en arrière-plan. L'icône de cadenas la verrouille immédiatement.",
+            "Par défaut, l'application se verrouille dès qu'elle passe en arrière-plan. L'icône de cadenas la verrouille immédiatement.",
             "Après 5 tentatives échouées, l'accès est bloqué temporairement, de plus en plus longtemps.",
             "Pour changer de code, de schéma ou de mot de passe : Réglages, puis Méthode de déverrouillage.",
             "Les captures d'écran sont bloquées et l'aperçu est masqué dans les applications récentes."
+        )
+    ),
+    Rubrique(
+        Icons.Outlined.Tune, "Personnaliser l'application",
+        listOf(
+            "Ouvrez Réglages et outils depuis l'accueil.",
+            "Sécurité : activez ou désactivez le verrouillage en arrière-plan, choisissez son délai (immédiat, 30 secondes, 1 minute ou 5 minutes) et la confidentialité (captures d'écran).",
+            "Ouverture : activez ou désactivez l'animation, choisissez son style (vague de lumière ou symboles un par un) et sa durée, puis touchez « Revoir l'animation » pour un aperçu.",
+            "Pendant l'animation d'ouverture, un appui sur l'écran la passe.",
+            "Lecteurs : épisode suivant automatique, reprise des vidéos, gestes de luminosité et de volume, bouton « Chapitre suivant ».",
+            "Importation : affichez ou masquez l'option « Depuis Will of D ».",
+            "Le blocage temporaire après 5 échecs reste toujours actif pour protéger le coffre."
         )
     )
 )
@@ -163,6 +176,17 @@ private val GUIDE = listOf(
 private class Version(val numero: String, val points: List<String>)
 
 private val NOUVEAUTES = listOf(
+    Version(
+        "1.2.0",
+        listOf(
+            "Nouveau style d'animation « Symboles un par un » : chaque symbole du poneglyph s'allume à son tour, la serrure en dernier.",
+            "Animation plus longue par défaut, durée réglable (de 1,5 à 5 secondes), animation désactivable, aperçu dans les réglages et appui pour la passer.",
+            "Verrouillage en arrière-plan désactivable, avec délai au choix : immédiat, 30 secondes, 1 minute ou 5 minutes.",
+            "Confidentialité (captures d'écran et aperçu masqué) désactivable.",
+            "Fonctions des lecteurs activables une à une : épisode suivant automatique, reprise des vidéos, gestes, bouton « Chapitre suivant ».",
+            "Option « Depuis Will of D » masquable dans le menu Importer."
+        )
+    ),
     Version(
         "1.1.1",
         listOf(
