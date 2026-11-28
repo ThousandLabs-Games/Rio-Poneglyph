@@ -21,18 +21,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import com.thousandlabs.rioponeglyph.ui.composants.CubePoneglyph
 import com.thousandlabs.rioponeglyph.ui.theme.Pierre
 
-/** Animation d'entrée : les glyphes du cube s'illuminent progressivement. */
+/**
+ * Animation d'entrée : la pierre de l'icône apparaît éteinte, une vague de lumière allume
+ * ses gravures du haut vers le bas, puis la lueur retombe sur la pierre au repos.
+ */
 @Composable
 fun EcranOuverture(onTermine: () -> Unit) {
     val revelation = remember { Animatable(0f) }
     val eclat = remember { Animatable(0f) }
+    val apaisement = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
-        revelation.animateTo(1f, tween(1400, easing = LinearOutSlowInEasing))
+        delay(200)
+        revelation.animateTo(1f, tween(1500, easing = LinearOutSlowInEasing))
         eclat.animateTo(1f, tween(260, easing = FastOutSlowInEasing))
         eclat.animateTo(0f, tween(320, easing = FastOutSlowInEasing))
+        apaisement.animateTo(1f, tween(380, easing = FastOutSlowInEasing))
         onTermine()
     }
     Box(
@@ -42,7 +49,7 @@ fun EcranOuverture(onTermine: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            CubePoneglyph(Modifier.size(220.dp), revelation.value, eclat.value)
+            CubePoneglyph(Modifier.size(220.dp), revelation.value, eclat.value, apaisement.value)
             Spacer(Modifier.height(24.dp))
             Text(
                 "Rio Poneglyph",

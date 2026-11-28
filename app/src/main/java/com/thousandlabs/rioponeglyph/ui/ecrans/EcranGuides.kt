@@ -164,6 +164,14 @@ private class Version(val numero: String, val points: List<String>)
 
 private val NOUVEAUTES = listOf(
     Version(
+        "1.1.1",
+        listOf(
+            "Nouvelle icône : la face du poneglyph, droite et en plein cadre, sans fond noir.",
+            "Animation d'ouverture refaite : la pierre de l'icône s'allume du haut vers le bas, avec exactement les mêmes symboles, la serrure et le cadenas.",
+            "Le même poneglyph apparaît sur les écrans de verrouillage et en haut de l'accueil."
+        )
+    ),
+    Version(
         "1.1.0",
         listOf(
             "Récupération depuis Will of D : Importer puis « Depuis Will of D », échange local à sens unique protégé par la signature Thousand Labs.",

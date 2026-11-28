@@ -43,6 +43,7 @@ Will of D : https://github.com/ThousandLabs-Games/Will-of-D
 | Récupération depuis Will of D, rangement par série, chapitre et épisode suivants | Version 1.1 |
 | Mises à jour intégrées (accès Internet de 2 minutes, signature vérifiée) | Version 1.0 |
 | Guide « Comment faire » et Nouveautés intégrés | Version 1.0 |
+| Icône plein cadre et animation d'ouverture tirée de la même pierre | Version 1.1.1 |
 
 ## Confidentialité
 

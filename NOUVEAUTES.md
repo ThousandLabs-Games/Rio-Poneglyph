@@ -1,3 +1,15 @@
+## Rio Poneglyph 1.1.1
+
+Nouvelle identité visuelle.
+
+- Nouvelle icône : la face du poneglyph, droite et en plein cadre, sans fond noir.
+- Animation d'ouverture refaite : la pierre de l'icône apparaît éteinte, puis ses gravures s'allument du haut vers le bas (symboles, serrure et cadenas identiques à l'icône) avant que la lueur ne retombe.
+- Le même poneglyph apparaît sur les écrans de verrouillage et en haut de l'accueil.
+
+Dépôt officiel : https://github.com/ThousandLabs-Games/Rio-Poneglyph
+
+---
+
 ## Rio Poneglyph 1.1.0
 
 Compatibilité avec Will of D, le navigateur sécurisé de Thousand Labs Games.
